@@ -36,23 +36,23 @@ It uses **LangChain** + **Google Gemini (Generative AI)** with a **vector-based 
 ---
 ## ⚙️ Setup Instructions
 1️⃣ Clone the Repo
-```
+```bash
 git clone https://github.com/your-username/Bilingual-RAG-Assistant-on-JMP-Wash-Dataset.git
 cd Bilingual-RAG-Assistant-on-JMP-Wash-Dataset
 ```
 
 2️⃣ Install Dependencies
-```
+```bash
 pip install -r requirements.txt
 ```
 
 3️⃣ Set API Key
 Create a .env file in the root:
-```
+```bash
 GOOGLE_API_KEY=your_gemini_api_key_here
 ```
 4️⃣ Run the App
-```
+```bash
 streamlit run app.py
 ```
 ---
