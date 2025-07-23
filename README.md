@@ -1,6 +1,7 @@
 # 🌐 Bilingual RAG Assistant on JMP Wash Dataset
 
-This project is a **Retrieval-Augmented Generation (RAG) Assistant** designed for the **Joint Monitoring Programme (JMP) Wash dataset**, capable of answering queries in both **Bangla** and **English**.
+This project is a **Retrieval-Augmented Generation (RAG) Assistant** designed for the  [**Joint Monitoring Programme (JMP) Wash dataset**](https://washdata.org/data/household#!/bgd) [1, 3] , capable of answering queries in both **Bangla** and **English**.
+
 
 It uses **LangChain** + **Google Gemini (Generative AI)** with a **vector-based document retrieval system (ChromaDB)** to build a smart, bilingual knowledge assistant that responds with grounded answers from documents.
 
