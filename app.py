@@ -44,7 +44,24 @@ st.set_page_config(page_title="Bilingual RAG Assistant on JMP Wash Dataset", pag
 st.title("Bilingual RAG Assistant on JMP Wash Dataset")
 st.markdown("Ask your question in **Bangla** or **English**:")
 
-query = st.text_input("Your Question")
-if query:
-    response = qa_chain.run(query)
-    st.markdown(f"### ✅ Answer:\n{response}")
+
+# Initialize chat history in session state
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+
+# Display chat history first
+if st.session_state.chat_history:
+    st.markdown("---")
+    st.markdown("## Chat History")
+    for i, chat in enumerate(st.session_state.chat_history, 1):
+        st.markdown(f"**Q{i}:** {chat['question']}")
+        st.markdown(f"**A{i}:** {chat['answer']}")
+
+# Place text input at the bottom and clear after submit
+with st.form(key="chat_form", clear_on_submit=True):
+    query = st.text_input("Your Question", value="")
+    submitted = st.form_submit_button("Send")
+    if submitted and query:
+        response = qa_chain.run(query)
+        st.session_state.chat_history.append({"question": query, "answer": response})
