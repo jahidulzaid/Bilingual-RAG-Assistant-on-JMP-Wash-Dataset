@@ -33,9 +33,11 @@ It uses **LangChain** + **Google Gemini (Generative AI)** with a **vector-based 
         |
         v
 [Final Answer]
----
+```
+
 ## ⚙️ Setup Instructions
 1️⃣ Clone the Repo
+
 ```bash
 git clone https://github.com/your-username/Bilingual-RAG-Assistant-on-JMP-Wash-Dataset.git
 cd Bilingual-RAG-Assistant-on-JMP-Wash-Dataset
