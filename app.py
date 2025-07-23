@@ -9,6 +9,7 @@ from langchain_google_genai import GoogleGenerativeAI
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
 # Load documents (JMP WASH data)
@@ -28,9 +29,11 @@ if not os.path.exists("./db"):
 else:
     vector_store = Chroma(persist_directory="./db", embedding_function=embedding_model)
 
-
-llm = GoogleGenerativeAI(model="gemini-2.5-pro", google_api_key="AIzaSyA4NrkxLM36FDW0GKNcdwi57u_F-w9eU78")
-
+# Load LLM from Google Generative AI
+llm = GoogleGenerativeAI(
+    model="gemini-2.5-pro",
+    google_api_key=os.getenv("GOOGLE_API_KEY")  # Use .env for security
+)
 
 # Create retrieval-based QA chain
 qa_chain = RetrievalQA.from_chain_type(
@@ -38,30 +41,41 @@ qa_chain = RetrievalQA.from_chain_type(
     retriever=vector_store.as_retriever(search_kwargs={"k": 3})
 )
 
-
-# For WebPage with:  Streamlit Interface
+# Streamlit page configuration
 st.set_page_config(page_title="Bilingual RAG Assistant on JMP Wash Dataset", page_icon="💧", layout="wide")
 st.title("Bilingual RAG Assistant on JMP Wash Dataset")
 st.markdown("Ask your question in **Bangla** or **English**:")
-
 
 # Initialize chat history in session state
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
+# Show previous messages
+for chat in st.session_state.chat_history:
+    with st.chat_message("user"):
+        st.markdown(chat["question"])
+    with st.chat_message("assistant"):
+        st.markdown(chat["answer"])
 
-# Display chat history first
-if st.session_state.chat_history:
-    st.markdown("---")
-    st.markdown("## Chat History")
-    for i, chat in enumerate(st.session_state.chat_history, 1):
-        st.markdown(f"**Q{i}:** {chat['question']}")
-        st.markdown(f"**A{i}:** {chat['answer']}")
+# Handle new user input
+if prompt := st.chat_input("Your Question"):
+    # Display user message
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-# Place text input at the bottom and clear after submit
-with st.form(key="chat_form", clear_on_submit=True):
-    query = st.text_input("Your Question", value="")
-    submitted = st.form_submit_button("Send")
-    if submitted and query:
-        response = qa_chain.run(query)
-        st.session_state.chat_history.append({"question": query, "answer": response})
+    # Generate and display assistant response
+    with st.spinner("💬 Generating response..."):
+        try:
+            response = qa_chain.run(prompt)
+        except Exception as e:
+            response = "something went wrong."
+            st.error(str(e))
+
+    with st.chat_message("assistant"):
+        st.markdown(response)
+
+    # Save conversation to session state
+    st.session_state.chat_history.append({
+        "question": prompt,
+        "answer": response
+    })
